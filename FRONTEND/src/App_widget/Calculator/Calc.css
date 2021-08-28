@@ -1,0 +1,64 @@
+body {
+    background-image:url(https://i.pinimg.com/originals/3d/1e/d4/3d1ed43517f666087f197418c60d9059.jpg);
+    color: white;
+    padding: 10px;
+    font-family: Arial;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+  }
+
+.Calc{
+    background:inherit;
+    padding: 20px;
+    width: 400px;
+    height: 450px;
+    overflow: hidden;   /*  to clip the content */
+    backdrop-filter: blur(10px);
+    /* only for background blur and not the content inside */
+    /* border: 1px groove; */
+    margin: auto;
+    display: grid;
+    grid-template-rows: auto auto auto;
+    border-radius:  20px;
+    box-shadow: 3px 5px black;
+}
+
+.operation-button{
+    background-color: #4CAF50;
+}
+
+.view-result{
+    text-align: right;
+    /* background-color: indigo; */
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid;
+    position: relative;
+    font-size: 35px;
+}
+
+.ans-result{
+    position:absolute;                 
+    bottom:5px;                         
+    right: 5px;
+    font-size: 30px;
+}
+
+.Buttons{
+    padding: 10px;
+    /* background-color: yellow; */
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-template-rows: 25% 25% 25% 25% 25%;
+    grid-gap: 2px;
+}
+
+button{
+    /* opacity:0.8; */
+    background:inherit;
+    font-weight: bolder;
+    color:rgb(255, 255, 255);
+    padding: 0;
+    font-size:20px;
+}
