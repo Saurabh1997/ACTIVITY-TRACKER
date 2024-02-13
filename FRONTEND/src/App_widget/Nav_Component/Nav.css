@@ -1,19 +1,19 @@
-ul{
-    list-style-type: none;
-    padding: 0px;
-    margin: 0px;
-    overflow: hidden;
-    background-color: #333;
+/* ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+  overflow: hidden;
+  background-color: #333;
 }
 
-li{
-    float: left;
-    display: block;
-    color: whitesmoke;
-    text-align: center;
-    padding: 14px 16px;
+li {
+  float: left;
+  display: block;
+  color: whitesmoke;
+  text-align: center;
+  padding: 14px 16px;
 }
 
 li:hover {
-    background-color: #111;
-  }
+  background-color: #111;
+} */

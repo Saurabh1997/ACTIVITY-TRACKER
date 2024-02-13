@@ -1,10 +1,15 @@
 import React from "react";
 import "./App.css";
-import CalcView from "./App_widget/Calculator/calcView";
 import Navbar from "App_widget/Nav_Component/Navbar";
 import About from "Routes/About";
+import { Outlet } from "react-router-dom";
+import useActiveStatus from "utils/hooks/useActiveStatus";
+import ErrorPage from "Routes/ErrorPage";
+import AtomSimulator from "components/AtomSimulator";
 
 function App() {
+  const isOnline = useActiveStatus();
+  console.log(" is online ", isOnline);
   let options = [
     {
       displayName: "Home",
@@ -36,9 +41,14 @@ function App() {
     Home: "#home",
   };
   return (
-    <div className="App">
+    <div>
       <Navbar options={options}></Navbar>
-      <CalcView></CalcView>
+      <AtomSimulator />
+      {!isOnline ? (
+        "You are offline currently. Please check your internet connection"
+      ) : (
+        <Outlet />
+      )}
     </div>
   );
 }

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Buttons from "./buttons";
 import "./Calc.css";
 import Result from "./Result";
 
 export default function CalcView() {
-  const [question, setQuestion] = React.useState("0");
-  const [answer, getAnswer] = React.useState(0);
+  const [question, setQuestion] = useState("0");
+  const [answer, getAnswer] = useState(0);
   let ans;
   const handleClick = (value) => {
     switch (value) {
@@ -69,9 +69,9 @@ export default function CalcView() {
     );
   });
   return (
-    <div className="Calc">
+    <div className="bg-inherit grid-rows-3 p-5 h-[550px] w-[500px] m-auto grid overflow-hidden rounded-3xl shadow-gray-50 backdrop-blur-md">
       <Result result={question} answer={answer}></Result>
-      <div className="Buttons">
+      <div className="p-[12px] grid grid-cols-4 grid-rows-5 gap-[5px]">
         {button_array}
 
         {/* <Buttons title={"%"}  question={question}></Buttons>

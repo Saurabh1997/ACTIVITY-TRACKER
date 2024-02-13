@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from "react";
-import styles from "./Nav.css";
 import { Link } from "react-router-dom";
 
 export default function Navbar({ options }) {
   const nav_menu = options.map((menu) => {
     return (
-      <li key={menu?.displayName}>
-        <Link to={`${menu?.path}`} class={`no-underline`}>
-          {menu?.displayName}
-        </Link>
+      <li key={menu?.displayName} className={``}>
+        <Link to={`${menu?.path}`}>{menu?.displayName}</Link>
       </li>
     );
   });
 
   return (
     <div>
-      <ul className={styles.nav} class={`no-underline`}>
+      <nav
+        className={
+          "p-2 m-0 list-none overflow-hidden flex justify-between bg-slate-700"
+        }
+      >
         {nav_menu}
-      </ul>
+      </nav>
     </div>
   );
 }

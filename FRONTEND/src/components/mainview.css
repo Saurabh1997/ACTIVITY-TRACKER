@@ -1,4 +1,4 @@
-.tableDesign, th, td {
+/* .tableDesign, th, td {
     border: 1px solid gray;
     padding: 5px;
     margin: 5px;
@@ -24,7 +24,6 @@ th {
 }
 
 .panel {
-    /* grid-auto-rows: 1fr; */
     display: flex;
     flex-direction: column;
-}
+} */

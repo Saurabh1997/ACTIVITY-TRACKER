@@ -7,36 +7,41 @@ import About from "Routes/About";
 import App from "App";
 import Signup from "Routes/Signup";
 import ErrorPage from "Routes/ErrorPage";
+import CalcView from "./App_widget/Calculator/calcView";
+import Login from "Routes/Login";
+import { RecoilRoot } from "recoil";
 
-const AppRouter = createBrowserRouter([
+const appRouter = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     errorElement: <ErrorPage />,
-    // children: [
-    //   {
-    //     path: "/about",
-    //     element: <About />,
-    //   },
-    //   {
-    //     path: "/signup",
-    //     element: <Signup />,
-    //   },
-    // ],
-  },
-  {
-    path: "/about",
-    element: <About />,
-  },
-  {
-    path: "/signup",
-    element: <Signup />,
+    children: [
+      {
+        path: "/",
+        element: <CalcView />,
+      },
+      {
+        path: "/about",
+        element: <About />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+    ],
   },
 ]);
 
 ReactDOM.render(
   <React.StrictMode>
-    <RouterProvider router={AppRouter} />
+    <RecoilRoot>
+      <RouterProvider router={appRouter}></RouterProvider>
+    </RecoilRoot>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -11,6 +11,7 @@ export default function buttons({ title, value, handleClick }) {
       onClick={() => {
         handleClick(value);
       }}
+      className="bg-inherit p-0 text-2xl font-bold"
     >
       {title}
     </button>
