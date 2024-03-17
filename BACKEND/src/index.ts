@@ -1,5 +1,7 @@
 import express from "express";
 import { z } from "zod";
+import { PrismaClient } from "@prisma/client";
+const prismaClient = new PrismaClient();
 
 const app = express();
 app.use(express.json());
@@ -42,7 +44,41 @@ const connectPostgresDB = async () => {
   // const result = await client.query(insertQuery, Values);
 };
 
+const InsertEntryThroughPrisma = async () => {
+  const result = await prismaClient.users.create({
+    data: {
+      email: "gap0@gmail.com",
+      firstName: "gaurav patil",
+      lastName: "patil",
+      password: "2938",
+      mobile_number: "9810101288",
+      profile_pic: "12039393.jpg",
+      date_of_birth: new Date(),
+      CreatedDt: new Date(),
+    },
+    select: {
+      email: true,
+      firstName: true,
+      lastName: true,
+    },
+  });
+  console.log(" result ", JSON.stringify(result));
+};
+
+const UpdateThroughPrisma = async () => {
+  const result = await prismaClient.users.update({
+    where: {
+      email: "gap0@gmail.com",
+    },
+    data: {
+      firstName: "gaurav ashok patil",
+    },
+  });
+};
+
 connectPostgresDB();
+UpdateThroughPrisma();
+// InsertEntryThroughPrisma();
 
 app.listen(4040, () => {
   console.log(" running on port");
