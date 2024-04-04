@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import "./App.css";
 import Navbar from "App_widget/Nav_Component/Navbar";
 import About from "Routes/About";
@@ -41,15 +41,14 @@ function App() {
     Home: "#home",
   };
   return (
-    <div>
+    <Fragment>
       <Navbar options={options}></Navbar>
-      <AtomSimulator />
       {!isOnline ? (
         "You are offline currently. Please check your internet connection"
       ) : (
         <Outlet />
       )}
-    </div>
+    </Fragment>
   );
 }
 

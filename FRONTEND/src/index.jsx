@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
@@ -10,6 +10,9 @@ import ErrorPage from "Routes/ErrorPage";
 import CalcView from "./App_widget/Calculator/calcView";
 import Login from "Routes/Login";
 import { RecoilRoot } from "recoil";
+import { Provider } from "react-redux";
+import { AppStore } from "store/reduxStore/store.service";
+import BlockView from "components/BlockView";
 
 const appRouter = createBrowserRouter([
   {
@@ -27,23 +30,33 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "/signup",
-        element: <Signup />,
+        element: (
+          <BlockView>
+            <Signup />
+          </BlockView>
+        ),
       },
       {
         path: "/login",
-        element: <Login />,
+        element: (
+          <BlockView>
+            <Login />
+          </BlockView>
+        ),
       },
     ],
   },
 ]);
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
   <React.StrictMode>
-    <RecoilRoot>
-      <RouterProvider router={appRouter}></RouterProvider>
-    </RecoilRoot>
-  </React.StrictMode>,
-  document.getElementById("root")
+    <Provider store={AppStore}>
+      <RecoilRoot>
+        <RouterProvider router={appRouter}></RouterProvider>
+      </RecoilRoot>
+    </Provider>
+  </React.StrictMode>
 );
 
 // If you want your app to work offline and load faster, you can change
