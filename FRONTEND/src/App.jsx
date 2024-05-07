@@ -6,10 +6,13 @@ import { Outlet } from "react-router-dom";
 import useActiveStatus from "utils/hooks/useActiveStatus";
 import ErrorPage from "Routes/ErrorPage";
 import AtomSimulator from "components/AtomSimulator";
+import useSocketStatus from "utils/hooks/useSocketStatus";
 
 function App() {
   const isOnline = useActiveStatus();
-  console.log(" is online ", isOnline);
+  const [isActive, socketMessaages] = useSocketStatus();
+
+  console.log(" is active ", isActive, " msg ", socketMessaages);
   let options = [
     {
       displayName: "Home",
@@ -43,6 +46,7 @@ function App() {
   return (
     <Fragment>
       <Navbar options={options}></Navbar>
+
       {!isOnline ? (
         "You are offline currently. Please check your internet connection"
       ) : (

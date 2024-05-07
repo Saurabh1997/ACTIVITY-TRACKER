@@ -14,7 +14,7 @@ export default function Navbar({ options }) {
     <div>
       <nav
         className={
-          "p-2 m-0 list-none overflow-hidden flex justify-between bg-slate-700"
+          "p-2 m-0 list-none overflow-hidden flex justify-between bg-slate-300"
         }
       >
         {nav_menu}
