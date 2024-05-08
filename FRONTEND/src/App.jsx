@@ -7,12 +7,11 @@ import useActiveStatus from "utils/hooks/useActiveStatus";
 import ErrorPage from "Routes/ErrorPage";
 import AtomSimulator from "components/AtomSimulator";
 import useSocketStatus from "utils/hooks/useSocketStatus";
+import Chat from "components/Chat";
 
 function App() {
   const isOnline = useActiveStatus();
-  const [isActive, socketMessaages] = useSocketStatus();
 
-  console.log(" is active ", isActive, " msg ", socketMessaages);
   let options = [
     {
       displayName: "Home",
@@ -46,7 +45,7 @@ function App() {
   return (
     <Fragment>
       <Navbar options={options}></Navbar>
-
+      <Chat />
       {!isOnline ? (
         "You are offline currently. Please check your internet connection"
       ) : (
