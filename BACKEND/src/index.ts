@@ -2,6 +2,7 @@ import express from "express";
 import { z } from "zod";
 import { InsertEntryThroughPrisma } from "./subscribers/userSubscriber";
 import { connectPostgresDB } from "./core/connectPostgres";
+import { connectToRedis } from "./core/connectToRedis";
 
 const app = express();
 app.use(express.json());
@@ -15,11 +16,14 @@ app.get(
   }
 );
 
-connectPostgresDB();
+// connectPostgresDB();
 // InsertEntryThroughPrisma();
 
-app.get("/signup", (req, res) => {
-  InsertEntryThroughPrisma();
+connectToRedis();
+
+app.get("/signup", async (req: express.Request, res: express.Response) => {
+  const response = await InsertEntryThroughPrisma();
+  res.send(response);
 });
 
 app.listen(4040, () => {

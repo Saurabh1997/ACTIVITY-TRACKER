@@ -29,5 +29,3 @@ export const connectPostgresDB = async () => {
   // const Values = ["gauravgap123", "gaurav patil", "gap123@gmail.com"];
   // const result = await client.query(insertQuery, Values);
 };
-
-
