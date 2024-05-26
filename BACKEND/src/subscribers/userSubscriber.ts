@@ -1,16 +1,23 @@
 import { OK } from "zod";
 import { prismaClient } from "../core/connectPostgres";
 
-export const InsertEntryThroughPrisma = async () => {
+export const InsertEntryThroughPrisma = async (UserDet: {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  mobile_number: string;
+  profile_pic: string;
+}) => {
   try {
     const result = await prismaClient.users.create({
       data: {
-        email: "gap918@gmail.com",
-        firstName: "gaurav patil",
-        lastName: "patil",
-        password: "2938",
-        mobile_number: "9810101288",
-        profile_pic: "12039393.jpg",
+        email: UserDet.email,
+        firstName: UserDet.firstName,
+        lastName: UserDet.lastName,
+        password: UserDet.password,
+        mobile_number: UserDet.mobile_number,
+        profile_pic: UserDet.profile_pic,
         date_of_birth: new Date(),
         CreatedDt: new Date(),
       },
