@@ -7,6 +7,7 @@ import {
   getValueFromRedis,
   setValueToRedis,
 } from "./subscribers/redisSubscriber";
+import { createResponseStructure } from "./utils/createResponseStructure";
 
 const app = express();
 app.use(express.json());
@@ -37,7 +38,13 @@ app.post("/signup", async (req: express.Request, res: express.Response) => {
 
 app.post("/setUserID", async (req: express.Request, res: express.Response) => {
   const response = await setValueToRedis("user:name", req.body.name);
-  res.send(response);
+  console.log(" User is set", response);
+  createResponseStructure({
+    res,
+    status: "200",
+    msg: "SUCCESS",
+    data: response,
+  });
 });
 
 app.get("/getUserID", async (req: express.Request, res: express.Response) => {
