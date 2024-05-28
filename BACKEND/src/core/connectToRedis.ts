@@ -12,14 +12,19 @@ class RedisConnector {
   }
 
   async connectToRedis() {
-    const client = await createClient()
+    const Redisclient = await createClient()
       .on("error", (err) => console.log("Redis Client Error", err))
       .connect();
 
     // await client.set('key', 'saurabh');
     // const value = await client.get('key');
     // console.log(" key ", value)
-    this.setClientConnect(client);
+    this.setClientConnect(Redisclient);
+  }
+
+  async pushToQueue(queueName: string, queueData: any) {
+    const clientConnector = this.getClientConnect();
+    await clientConnector.lPush(queueName, queueData);
   }
 }
 

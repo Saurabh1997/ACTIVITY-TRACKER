@@ -10,3 +10,12 @@ export const getValueFromRedis = async (key: string) => {
   const value = await client.get(key);
   return value;
 };
+
+export const pushToRedis = async (queueName: string, data: any) => {
+  await redisClient.pushToQueue(queueName, data);
+  return {
+    status: "Data is pushed",
+  };
+};
+
+
