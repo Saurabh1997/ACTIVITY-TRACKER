@@ -5,6 +5,7 @@ import { connectPostgresDB } from "./core/connectPostgres";
 import redisClient from "./core/connectToRedis";
 import {
   getValueFromRedis,
+  pushToRedis,
   setValueToRedis,
 } from "./subscribers/redisSubscriber";
 import { createResponseStructure } from "./utils/createResponseStructure";
@@ -50,7 +51,32 @@ app.post("/setUserID", async (req: express.Request, res: express.Response) => {
 app.get("/getUserID", async (req: express.Request, res: express.Response) => {
   const response = await getValueFromRedis("user:name");
   console.log(" res[ ", response);
-  res.send(response);
+  createResponseStructure({
+    res,
+    status: "200",
+    msg: "SUCCESS",
+    data: response,
+  });
 });
+
+app.post(
+  "/postMessage",
+  async (req: express.Request, res: express.Response) => {
+    await pushToRedis(
+      "chatRoom",
+      JSON.stringify({
+        msg: req.body.msg,
+        fromUser: req.body.fromUser,
+        toUser: req.body.toUser,
+      })
+    );
+    createResponseStructure({
+      res,
+      status: "200",
+      msg: "SUCCESS",
+      data: "data is pushed",
+    });
+  }
+);
 
 startServer();

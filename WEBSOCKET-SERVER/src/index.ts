@@ -1,12 +1,23 @@
 import { WebSocketServer, WebSocket } from "ws";
 import * as express from "express";
+import { pullFromQueue } from "./subscribers/redisSubscriber";
 //import { createServer } from "http";
 
 // const server = createServer((req, res) => {
 //   console.log("new request at ", Date.now(), req.url);
 //   res.end(" coming from server");
 // });
+
 const app = express();
+
+app.get(
+  "/getDataFromChatRoom",
+  async (req: express.Request, res: express.Response) => {
+    const data = await pullFromQueue("chatRoom");
+    res.status(200).send(data);
+  }
+);
+
 const socketServer = app.listen(8080);
 
 const wss = new WebSocketServer({ server: socketServer });
