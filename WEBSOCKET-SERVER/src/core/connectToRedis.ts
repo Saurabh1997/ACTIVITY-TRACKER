@@ -29,8 +29,9 @@ class RedisConnector {
 
   async pullFromQueue(queueName: string) {
     const clientConnector = this.getClientConnect();
-    const data = await clientConnector.brPop(queueName);
-    return data;
+    const data = await clientConnector.brPop(queueName, 0);
+    console.log(" data ", data);
+    return JSON.parse(data.element);
   }
 }
 

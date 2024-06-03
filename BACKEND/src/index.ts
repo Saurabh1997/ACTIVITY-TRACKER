@@ -62,12 +62,13 @@ app.get("/getUserID", async (req: express.Request, res: express.Response) => {
 app.post(
   "/postMessage",
   async (req: express.Request, res: express.Response) => {
+    const { msg, fromUser, toUser } = req.body;
     await pushToRedis(
       "chatRoom",
       JSON.stringify({
-        msg: req.body.msg,
-        fromUser: req.body.fromUser,
-        toUser: req.body.toUser,
+        msg,
+        fromUser,
+        toUser,
       })
     );
     createResponseStructure({
