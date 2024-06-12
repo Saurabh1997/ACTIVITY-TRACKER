@@ -69,7 +69,7 @@ export default function CalcView() {
     );
   });
   return (
-    <div className="bg-inherit grid-rows-3 p-5 h-[550px] w-[500px] m-auto grid overflow-hidden rounded-3xl shadow-gray-50 backdrop-blur-md">
+    <div className="bg-inherit grid-rows-[1fr,2fr] p-5 mt-4 bg-teal-300 h-[550px] w-[500px] m-auto grid overflow-hidden rounded-3xl shadow-gray-50 backdrop-blur-md">
       <Result result={question} answer={answer}></Result>
       <div className="p-[12px] grid grid-cols-4 grid-rows-5 gap-[5px]">
         {button_array}

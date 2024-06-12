@@ -45,7 +45,7 @@ function App() {
   return (
     <Fragment>
       <Navbar options={options}></Navbar>
-      <Chat />
+      {/* <Chat /> */}
       {!isOnline ? (
         "You are offline currently. Please check your internet connection"
       ) : (
