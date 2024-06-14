@@ -1,6 +1,9 @@
 import { Fragment, useState } from "react";
+import Turnstile, { useTurnstile } from "react-turnstile";
+import axios from "axios";
 
 const ResetPassword = () => {
+  const turnstile = useTurnstile();
   const [email, setEmail] = useState("");
   const [isOTPActive, setIsOTPActive] = useState(false);
   const [otpValue, setOTPValue] = useState("");
@@ -24,14 +27,29 @@ const ResetPassword = () => {
         onChange={(e) => setEmail(e.target.value)}
       />
       {isOTPActive && (
-        <input
-          type="number"
-          name="OTP"
-          className={"m-2 p-2 text-black rounded-sm"}
-          placeholder="Enter OTP received in your Email"
-          value={otpValue}
-          onChange={(e) => setOTPValue(e.target.value)}
-        />
+        <Fragment>
+          <input
+            type="number"
+            name="OTP"
+            className={"m-2 p-2 text-black rounded-sm"}
+            placeholder="Enter OTP received in your Email"
+            value={otpValue}
+            onChange={(e) => setOTPValue(e.target.value)}
+          />
+          <Turnstile
+            sitekey="0x4AAAAAAAchjOYtDnGWBrNL"
+            onVerify={async (token) => {
+              const res = await axios.post(
+                "http://localhost:4040/forgotpassword",
+                {
+                  token,
+                }
+              );
+              console.log(" res ", res);
+              if (!res.ok) turnstile.reset();
+            }}
+          />
+        </Fragment>
       )}
       <button className={"border"} onClick={sendOTP}>
         {isOTPActive ? "Submit OTP" : "Send OTP to your Email"}
