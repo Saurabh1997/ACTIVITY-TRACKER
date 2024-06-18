@@ -45,7 +45,6 @@ const ResetPassword = () => {
                   token,
                 }
               );
-              console.log(" res ", res);
               if (!res.ok) turnstile.reset();
             }}
           />

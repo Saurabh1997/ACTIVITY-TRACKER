@@ -82,7 +82,6 @@ app.post(
       method: "POST",
     });
     const outcome = await result.json();
-    console.log(" token ", outcome);
     if (outcome.success) {
       createResponseStructure({
         res,
