@@ -1,7 +1,6 @@
 import { WebSocketServer, WebSocket } from "ws";
 import * as express from "express";
-import { pullFromQueue } from "./subscribers/redisSubscriber";
-import redisClient from "./core/connectToRedis";
+import RedisConnector from "./core/connectToRedis";
 //import { createServer } from "http";
 
 // const server = createServer((req, res) => {
@@ -21,7 +20,9 @@ const app = express();
 
 const pullDataFromRedisQueue = async () => {
   while (1) {
-    const data = await pullFromQueue("chatRoom");
+    const data = await RedisConnector.getClientInstance().pullFromQueue(
+      "chatRoom"
+    );
     console.log(" data -- ", data);
     // Implement pub sub here.
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -30,7 +31,7 @@ const pullDataFromRedisQueue = async () => {
 };
 
 const startServer = async () => {
-  await redisClient.connectToRedis();
+  await RedisConnector.getClientInstance();
   const socketServer = app.listen(8080);
 
   const wss = new WebSocketServer({ server: socketServer });

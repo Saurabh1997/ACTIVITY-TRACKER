@@ -2,12 +2,7 @@ import express from "express";
 import { z } from "zod";
 import { InsertEntryThroughPrisma } from "./subscribers/userSubscriber";
 import { connectPostgresDB } from "./core/connectPostgres";
-import redisClient from "./core/connectToRedis";
-import {
-  getValueFromRedis,
-  pushToRedis,
-  setValueToRedis,
-} from "./subscribers/redisSubscriber";
+import RedisConnector from "./core/connectToRedis";
 import { createResponseStructure } from "./utils/createResponseStructure";
 import cors, { CorsOptions } from "cors";
 
@@ -22,7 +17,7 @@ let corsOptions: CorsOptions = {
 app.use(cors(corsOptions));
 
 const startServer = async () => {
-  await redisClient.connectToRedis();
+  await RedisConnector.getClientInstance();
   app.listen(4040, () => {
     console.log(" running on port");
   });
@@ -46,7 +41,10 @@ app.post("/signup", async (req: express.Request, res: express.Response) => {
 });
 
 app.post("/setUserID", async (req: express.Request, res: express.Response) => {
-  const response = await setValueToRedis("user:name", req.body.name);
+  const response = await RedisConnector.getClientInstance().setCacheKey(
+    "user:name",
+    req.body.name
+  );
   console.log(" User is set", response);
   createResponseStructure({
     res,
@@ -57,7 +55,9 @@ app.post("/setUserID", async (req: express.Request, res: express.Response) => {
 });
 
 app.get("/getUserID", async (req: express.Request, res: express.Response) => {
-  const response = await getValueFromRedis("user:name");
+  const response = await RedisConnector.getClientInstance().getCacheKey(
+    "user:name"
+  );
   console.log(" res[ ", response);
   createResponseStructure({
     res,
@@ -104,7 +104,16 @@ app.post(
   "/postMessage",
   async (req: express.Request, res: express.Response) => {
     const { msg, fromUser, toUser } = req.body;
-    await pushToRedis(
+    // await pushToRedis(
+    //   "chatRoom",
+    //   JSON.stringify({
+    //     msg,
+    //     fromUser,
+    //     toUser,
+    //   })
+    // );
+
+    await RedisConnector.getClientInstance().pushToQueue(
       "chatRoom",
       JSON.stringify({
         msg,
@@ -112,6 +121,7 @@ app.post(
         toUser,
       })
     );
+
     createResponseStructure({
       res,
       status: "200",

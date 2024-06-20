@@ -1,40 +1,49 @@
-import { createClient } from "redis";
+import { RedisClientType, createClient } from "redis";
 
-class RedisConnector {
-  client: any;
+export default class RedisConnector {
+  private client: RedisClientType;
+  private static redisInstance: RedisConnector;
 
-  setClientConnect(client: any) {
-    this.client = client;
+  private constructor() {
+    this.client = createClient();
   }
 
-  getClientConnect() {
-    return this.client;
+  public static getClientInstance() {
+    if (RedisConnector.redisInstance) {
+      return RedisConnector.redisInstance;
+    } else {
+      RedisConnector.redisInstance = new RedisConnector();
+      return RedisConnector.redisInstance;
+    }
   }
 
-  async connectToRedis() {
-    const Redisclient = await createClient()
-      .on("error", (err) => console.log("Redis Client Error", err))
-      .connect();
+  // async connectToRedis() {
+  //   const Redisclient = await createClient()
+  //     .on("error", (err) => console.log("Redis Client Error", err))
+  //     .connect();
 
-    // await client.set('key', 'saurabh');
-    // const value = await client.get('key');
-    // console.log(" key ", value)
-    this.setClientConnect(Redisclient);
-  }
+  //   // await client.set('key', 'saurabh');
+  //   // const value = await client.get('key');
+  //   // console.log(" key ", value)
+  //   this.setClientConnect(Redisclient);
+  // }
 
-  async pushToQueue(queueName: string, queueData: any) {
-    const clientConnector = this.getClientConnect();
-    await clientConnector.lPush(queueName, queueData);
-  }
+  public pushToQueue = async (queueName: string, queueData: any) => {
+    await this.client.lPush(queueName, queueData);
+  };
 
-  async pullFromQueue(queueName: string) {
-    const clientConnector = this.getClientConnect();
-    const data = await clientConnector.brPop(queueName, 0);
+  public setCacheKey = async (key: string, value: string) => {
+    await this.client.set(key, value);
+  };
+
+  public getCacheKey = async (key: string) => {
+    const value = await this.client.get(key);
+    return value;
+  };
+
+  public pullFromQueue = async (queueName: string) => {
+    const data = await this.client.brPop(queueName, 0);
     console.log(" data ", data);
     return JSON.parse(data.element);
-  }
+  };
 }
-
-const redisClient = new RedisConnector();
-
-export default redisClient;
