@@ -1,6 +1,8 @@
 import { WebSocketServer, WebSocket } from "ws";
 import * as express from "express";
 import RedisConnector from "./core/connectToRedis";
+import { createClient } from "redis";
+
 //import { createServer } from "http";
 
 // const server = createServer((req, res) => {
@@ -20,13 +22,16 @@ const app = express();
 
 const pullDataFromRedisQueue = async () => {
   while (1) {
-    const data = await RedisConnector.getClientInstance().pullFromQueue(
-      "chatRoom"
-    );
-    console.log(" data -- ", data);
-    // Implement pub sub here.
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log("process done");
+    try {
+      const data = await RedisConnector.getClientInstance().pullFromQueue(
+        "chatRoom"
+      );
+      // Implement pub sub here.
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("process done", data);
+    } catch (error) {
+      console.log("error ", error);
+    }
   }
 };
 

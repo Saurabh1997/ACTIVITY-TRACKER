@@ -5,7 +5,14 @@ export default class RedisConnector {
   private static redisInstance: RedisConnector;
 
   private constructor() {
-    this.client = createClient();
+    this.client = createClient({
+      password: "t3O2Fx6zRCiJIUhT9J9a0JCW2gx8Aav9",
+      socket: {
+        host: "redis-13365.c240.us-east-1-3.ec2.redns.redis-cloud.com",
+        port: 13365,
+      },
+    });
+    this.client.connect();
   }
 
   public static getClientInstance() {
@@ -43,7 +50,6 @@ export default class RedisConnector {
 
   public pullFromQueue = async (queueName: string) => {
     const data = await this.client.brPop(queueName, 0);
-    console.log(" data ", data);
     return JSON.parse(data.element);
   };
 }
