@@ -3,8 +3,10 @@ import { RedisClientType, createClient } from "redis";
 export default class RedisConnector {
   private client: RedisClientType;
   private static redisInstance: RedisConnector;
+  private ActivityTrackedUserList: Map<String, String[]>;
 
   private constructor() {
+    this.ActivityTrackedUserList = new Map();
     this.client = createClient({
       password: "t3O2Fx6zRCiJIUhT9J9a0JCW2gx8Aav9",
       socket: {
@@ -51,5 +53,44 @@ export default class RedisConnector {
   public pullFromQueue = async (queueName: string) => {
     const data = await this.client.brPop(queueName, 0);
     return JSON.parse(data.element);
+  };
+
+  public subscribeUsersToActivity = async (
+    activityName: string,
+    user_id: string
+  ) => {
+    if (this.ActivityTrackedUserList.has(activityName)) {
+      this.ActivityTrackedUserList.get(activityName)?.push(user_id);
+    } else {
+      this.ActivityTrackedUserList.set(activityName, [user_id]);
+    }
+    // USUALLY WE WILL FETCH USER LIST FROM DATABASE
+    if (this.ActivityTrackedUserList.get(activityName)?.length === 1) {
+      await this.client.subscribe(activityName, (message, channel) => {
+        this.NotifyUsers(message, channel);
+      });
+    }
+  };
+
+  public unSubscribeUsersFromActivity = async (
+    activityName: string,
+    user_id: string
+  ) => {
+    if (this.ActivityTrackedUserList.has(activityName)) {
+    }
+  };
+
+  private NotifyUsers = async (status: string, activityName: string) => {
+    console.log("received message ", status, "on - ", activityName);
+    this.ActivityTrackedUserList.forEach((user) => {
+      console.log(
+        "received message ",
+        status,
+        "on - ",
+        activityName,
+        "for ",
+        user
+      );
+    });
   };
 }

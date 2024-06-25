@@ -131,4 +131,31 @@ app.post(
   }
 );
 
+app.post(
+  "/publishActivityStatus",
+  async (req: express.Request, res: express.Response) => {
+    try {
+      const { activityName, status } = req.body;
+      await RedisConnector.getClientInstance().publishEvent(
+        activityName,
+        status
+      );
+      createResponseStructure({
+        res,
+        status: "200",
+        msg: "SUCCESS",
+        data: "data is published",
+      });
+    } catch (error) {
+      console.log(" err o ", error);
+      createResponseStructure({
+        res,
+        status: "400",
+        msg: "Failed",
+        data: "Data push failed",
+      });
+    }
+  }
+);
+
 startServer();

@@ -3,6 +3,7 @@ import { RedisClientType, createClient } from "redis";
 export default class RedisConnector {
   private client: RedisClientType;
   private static redisInstance: RedisConnector;
+  // Activity , list of users tracking this
 
   private constructor() {
     this.client = createClient({
@@ -37,18 +38,20 @@ export default class RedisConnector {
   // }
 
   public pushToQueue = async (queueName: string, queueData: any) => {
-    const clientConnector = RedisConnector.getClientInstance();
-    await clientConnector.client.lPush(queueName, queueData);
+    await this.client.lPush(queueName, queueData);
   };
 
   public setCacheKey = async (key: string, value: string) => {
-    const clientConnector = RedisConnector.getClientInstance();
-    await clientConnector.client.set(key, value);
+    await this.client.set(key, value);
   };
 
   public getCacheKey = async (key: string) => {
-    const clientConnector = RedisConnector.getClientInstance();
-    const value = await clientConnector.client.get(key);
+    const value = await this.client.get(key);
     return value;
+  };
+
+  public publishEvent = async (channel: string, message: string) => {
+    await this.client.publish(channel, message);
+    return "Event is published";
   };
 }

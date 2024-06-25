@@ -11,6 +11,7 @@ import { createClient } from "redis";
 // });
 
 const app = express();
+app.use(express.json());
 
 // app.get(
 //   "/getDataFromChatRoom",
@@ -39,6 +40,11 @@ const startServer = async () => {
   await RedisConnector.getClientInstance();
   const socketServer = app.listen(8080);
 
+  await RedisConnector.getClientInstance().subscribeUsersToActivity(
+    "coding",
+    "saurabhpatil@.com"
+  );
+
   const wss = new WebSocketServer({ server: socketServer });
 
   wss.on("connection", function connection(socket) {
@@ -55,8 +61,38 @@ const startServer = async () => {
     });
     socket.send("Hello! Message From websovket!!");
   });
-  pullDataFromRedisQueue();
+  // pullDataFromRedisQueue();
 };
+
+app.post(
+  "/subscribeToUsersList",
+  async (req: express.Request, res: express.Response) => {
+    const { user_id, activityName } = req.body;
+    const result =
+      await RedisConnector.getClientInstance().subscribeUsersToActivity(
+        activityName,
+        user_id
+      );
+    res.send({
+      data: "User is added to subscribed to the activity",
+    });
+  }
+);
+
+// app.post(
+//   "/unsubscribeToUsersList",
+//   async (req: express.Request, res: express.Response) => {
+//     const { user_id, activityName } = req.body;
+//     const result =
+//       await RedisConnector.getClientInstance().unSubscribeUsersFromActivity(
+//         activityName,
+//         user_id
+//       );
+//     res.send({
+//       data: "User is added to subscribed to the activity",
+//     });
+//   }
+// );
 
 startServer();
 
