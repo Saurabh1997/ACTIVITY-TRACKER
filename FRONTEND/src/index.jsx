@@ -13,6 +13,7 @@ import { RecoilRoot } from "recoil";
 import { Provider } from "react-redux";
 import { AppStore } from "store/reduxStore/store.service";
 import BlockView from "components/BlockView";
+import Contact from "Routes/Contact";
 
 const appRouter = createBrowserRouter([
   {
@@ -41,6 +42,14 @@ const appRouter = createBrowserRouter([
         element: (
           <BlockView>
             <Login />
+          </BlockView>
+        ),
+      },
+      {
+        path: "/contact",
+        element: (
+          <BlockView>
+            <Contact />
           </BlockView>
         ),
       },
