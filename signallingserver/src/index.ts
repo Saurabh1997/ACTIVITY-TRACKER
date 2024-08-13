@@ -8,7 +8,6 @@ let receiverWebSocket: WebSocket | null = null;
 const wss = new WebSocketServer({ port: 4041 });
 
 wss.on("connection", (ws) => {
-  console.log(" da\ta ");
   ws.on("error", (error) => {
     console.log(" error ", error);
   });
@@ -33,9 +32,11 @@ wss.on("connection", (ws) => {
         break;
       case "sender-candidate":
         senderWebSocket = ws;
+        console.log(" sender is set");
         break;
       case "receiver-candidate":
         receiverWebSocket = ws;
+        console.log(" receiver is set");
         break;
       default:
         break;

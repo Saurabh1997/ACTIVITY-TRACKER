@@ -4,9 +4,16 @@ import { useState } from "react";
 
 function Contact() {
   const [peer, setPeer] = useState("");
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const socketCon = new WebSocket("ws://localhost:4041");
+    if (socketCon) {
+      setSocket(socketCon);
+    }
+  }, []);
 
   const setPeerForCall = (e) => {
-    console.log(" coming here on click");
     let peerCandidate = e.target.name;
     if (peerCandidate === "sender") setPeer("sender");
     else setPeer("receiver");
@@ -24,7 +31,7 @@ function Contact() {
       <button className={"border m-2"} name="receiver" onClick={setPeerForCall}>
         {"Join as Receiver"}
       </button>
-      {peer && peer !== "" && <Peer peerType={peer} />}
+      {peer && peer !== "" && <Peer peerType={peer} socket={socket} />}
     </div>
   );
 }

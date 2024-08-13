@@ -1,20 +1,11 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-function Peer({ peerType }) {
-  const [socket, setSocket] = useState(null);
-
+function Peer({ peerType, socket }) {
   useEffect(() => {
-    console.log(" coming ");
-    const socketCon = new WebSocket("ws://localhost:4041");
-    if (socketCon) {
-      setSocket(socket);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (socket && peerType) {
-      console.log(" coming here in peer ", peerType, "socke - ", socket);
+    console.log(" coming gere ", socket, " peer ", peerType);
+    if (socket !== null && socket.readyState === 1 && peerType) {
+      console.log(" coming here in peer 2", peerType, "socke - ", socket);
 
       socket.onopen = () => {
         if (peerType === "sender") {
@@ -33,53 +24,70 @@ function Peer({ peerType }) {
     }
   }, [peerType, socket]);
 
+  const attachIceCandidateToPeer = (peerConnection) => {
+    peerConnection.onicecandidate = (event) => {
+      console.log(" ice candidate", event.candidate);
+      if (event.candidate) {
+        socket.send({
+          type: "addIceCandidate",
+          candidate: event.candidate,
+        });
+      }
+    };
+  };
+
   const initVideoForSender = async () => {
+    if (!socket) {
+      alert("Socket not connected");
+      return;
+    }
     // Creating offer
-    console.log(" coming here for sending");
+    console.log(" coming here for sending", socket);
     const peerConnection = new RTCPeerConnection();
     const offer = await peerConnection.createOffer();
     await peerConnection.setLocalDescription(offer);
-    socket.send(
+
+    attachIceCandidateToPeer(peerConnection);
+
+    socket.onmessage = async (message) => {
+      const data = JSON.parse(message.data);
+      console.log(
+        "message received by sender after getting answer",
+        message.data
+      );
+      if (data.type === "send-answer") {
+        peerConnection.setRemoteDescription(data.data);
+      } else if (data.type === "addIceCandidate") {
+        peerConnection.addIceCandidate(data.candidate);
+      }
+    };
+
+    socket?.send(
       JSON.stringify({
         type: "send-offer",
         data: peerConnection.localDescription,
         offer: offer,
       })
     );
-
-    socket.onmessage = async (message) => {
-      const data = JSON.parse(message);
-      console.log(
-        "message received by sender after getting answer",
-        message.data
-      );
-      if (data.type === "send-answer") {
-        //   const ReceiverPeerConnection = new RTCPeerConnection();
-        //   await ReceiverPeerConnection.setRemoteDescription(data.data);
-        //   const answer = await ReceiverPeerConnection.createAnswer();
-        //   await ReceiverPeerConnection.setLocalDescription(answer);
-        peerConnection.setRemoteDescription(data.data);
-        // socket.send(
-        //   JSON.stringify({
-        //     type: "send-answer",
-        //     data: answer,
-        //   })
-        // );
-      }
-    };
   };
 
   const initVideoForReceiver = async () => {
+    if (!socket) {
+      alert("Socket not connected");
+      return;
+    }
     // Creating answer
     console.log(" coming here for receiving");
+    let ReceiverPeerConnection;
     socket.onmessage = async (message) => {
       console.log(" coming here 2");
       const data = JSON.parse(message.data);
       console.log(" coming here 5");
       console.log("message received by receiver", message.data);
       if (data.type === "send-offer") {
-        const ReceiverPeerConnection = new RTCPeerConnection();
+        ReceiverPeerConnection = new RTCPeerConnection();
         await ReceiverPeerConnection.setRemoteDescription(data.data);
+        attachIceCandidateToPeer(ReceiverPeerConnection);
         const answer = await ReceiverPeerConnection.createAnswer();
         await ReceiverPeerConnection.setLocalDescription(answer);
         socket.send(
@@ -88,18 +96,13 @@ function Peer({ peerType }) {
             data: answer,
           })
         );
+      } else if (data.type === "addIceCandidate") {
+        ReceiverPeerConnection.addIceCandidate(data.candidate);
       }
     };
-    // socket.send(
-    //   JSON.stringify({
-    //     type: "send-offer",
-    //     data: peerConnection.localDescription,
-    //     answer,
-    //   })
-    // );
   };
 
-  return <div></div>;
+  return <div>{peerType}</div>;
 }
 
 export default Peer;
