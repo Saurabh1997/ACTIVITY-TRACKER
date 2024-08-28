@@ -14,9 +14,11 @@ wss.on("connection", (ws) => {
 
   ws.on("message", (data) => {
     const message = JSON.parse(data.toString());
-    console.log(" msg ", message);
+    console.log("cominh here ", message.type);
+
     switch (message.type) {
       case "send-offer":
+        console.log("rece", receiverWebSocket);
         if (!receiverWebSocket) return;
         else
           receiverWebSocket.send(
@@ -24,6 +26,8 @@ wss.on("connection", (ws) => {
           );
         break;
       case "send-answer":
+        console.log(" sending answer");
+
         if (!senderWebSocket) return;
         else
           senderWebSocket.send(
@@ -37,6 +41,23 @@ wss.on("connection", (ws) => {
       case "receiver-candidate":
         receiverWebSocket = ws;
         console.log(" receiver is set");
+        break;
+      case "addIceCandidate":
+        if (ws === senderWebSocket) {
+          receiverWebSocket?.send(
+            JSON.stringify({
+              type: "addIceCandidate",
+              candidate: message.candidate,
+            })
+          );
+        } else {
+          senderWebSocket?.send(
+            JSON.stringify({
+              type: "addIceCandidate",
+              candidate: message.candidate,
+            })
+          );
+        }
         break;
       default:
         break;
