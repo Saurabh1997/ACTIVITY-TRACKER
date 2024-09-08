@@ -53,11 +53,12 @@ function Sender() {
       }
     };
     const stream = await navigator.mediaDevices.getUserMedia({
-      audio: false,
+      audio: true,
       video: true,
     });
     console.log(" stream ", stream);
     peerConnection.addTrack(stream.getVideoTracks()[0]);
+    peerConnection.addTrack(stream.getAudioTracks()[0]);
   };
 
   return (

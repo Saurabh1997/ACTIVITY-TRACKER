@@ -28,6 +28,7 @@ function Receiver() {
     const ReceiverPeerConnection = new RTCPeerConnection();
     console.log(" coming after connection ");
     socket.onmessage = async (message) => {
+      console.log(" coming here 4");
       const data = JSON.parse(message.data);
       console.log(" coming here 5");
       console.log("message received by receiver", message.data);
@@ -43,7 +44,10 @@ function Receiver() {
           })
         );
       } else if (data.type === "addIceCandidate") {
-        ReceiverPeerConnection.addIceCandidate(data.candidate);
+        if (ReceiverPeerConnection !== null) {
+          console.log("coming ice candidate");
+          ReceiverPeerConnection.addIceCandidate(data.candidate);
+        }
       }
     };
     ReceiverPeerConnection.ontrack = async (event) => {
@@ -57,11 +61,13 @@ function Receiver() {
   return (
     <div className="flex flex-col items-center">
       <div>Receiver</div>
-      <button className="border m-2">Receive the call</button>
-      <div className="flex">
-        <video ref={senderVideoRef}></video>
-        <video ref={receiverVideoRef}></video>
-      </div>
+      {/* <button className="border m-2">Receive the call</button> */}
+      {senderVideoRef !== null && (
+        <div className="">
+          <video ref={senderVideoRef}></video>
+          {/* <video ref={receiverVideoRef}></video> */}
+        </div>
+      )}
     </div>
   );
 }
