@@ -20,8 +20,12 @@ const server = new ApolloServer({
   resolvers,
 });
 
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 5431 },
-});
+const startApolloGraphqlServer = async() => {
+  const { url } = await startStandaloneServer(server, {
+    listen: { port: 5431 },
+  });
+  
+  console.log(" server is ready at port 5431");
+}
 
-console.log(" server is ready at port 5431");
+startApolloGraphqlServer()
