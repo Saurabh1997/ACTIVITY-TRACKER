@@ -1,12 +1,12 @@
 export const typeDefs = `#graphql
     type User {
-        Id: ID!
+        id: ID!
         name: String!
         age: Int!
         mobile_number: String!        
     }
     type Activity {
-        Id: ID!
+        id: ID!
         activity_name: String!
         activity_steps: [String!]!
         user_id: String! 
@@ -18,6 +18,8 @@ export const typeDefs = `#graphql
 
     type Query {
         users: [User]
-        activities: [Activity] 
+        user(id: ID!): User 
+        activities: [Activity]
+        activity(id: ID!): Activity 
     }
 `;
