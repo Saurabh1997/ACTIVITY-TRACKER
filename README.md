@@ -37,3 +37,10 @@ docker container exec -ti container_id /bin/bash
 ## Signalling server:
 
 - For establishing P2P connection for video calling using webRTC
+
+## Graphql-server:
+
+- using Apollo client as graphql server to fetch/add/update activities, users, documents.
+- Users - has activities
+- Activity - has Users list.
+- 
