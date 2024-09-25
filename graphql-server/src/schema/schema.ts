@@ -4,19 +4,20 @@ export const typeDefs = `#graphql
         name: String!
         age: Int!
         mobile_number: String! 
-        activity: [Activity!]       
+        activities: [Activity!]       
     }
     type Activity {
         id: ID!
         activity_name: String!
         activity_steps: [String!]!
-        user: User! 
+        users: [User!] 
+        activity_document: Activity_Document!
         completed: Boolean! 
     }
     type Activity_Document {
         id: ID!
         activity_id: String!
-        users_connected: [String!]!
+        users: [User!]!
         document_name: String!
         document_url: String! 
     }

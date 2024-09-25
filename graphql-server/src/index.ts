@@ -18,6 +18,11 @@ const resolvers = {
       return activities.find((activity) => activity.id === args.id);
     },
   },
+  User: {
+    activities(parent: { id: string }) {
+      return activities.filter((activity) => activity.user_id === parent.id);
+    },
+  },
 };
 
 // two properties required - typeDefs , resolvers
