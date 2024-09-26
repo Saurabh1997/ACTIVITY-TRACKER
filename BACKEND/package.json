@@ -5,7 +5,9 @@
   "module": "true",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc -b && nodemon dist/index.js",
+    "compile": "tsc",
+    "start": "npm run compile && node ./dist/index.js",
+    "dev": "nodemon --watch src --ext ts --exec \"tsc && node dist/index.js \"",
     "switch-node-new": "nvm use 20",
     "switch-node-old": "nvm use 14"
   },
