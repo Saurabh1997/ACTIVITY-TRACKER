@@ -41,11 +41,23 @@ const resolvers = {
       );
     },
   },
-  // Activity_document: {
-  //   users(parent: { user_id: string }) {
-  //     return users.filter((user) => user.id === parent.user_id);
-  //   },
-  // },
+  Activity_Document: {
+    activities(parent: { activity_id: string }) {
+      return activities.filter(
+        (activity) => activity.id === parent.activity_id
+      );
+    },
+    users(parent: { activity_id: string }) {
+      let Filteredactivity = activities.filter(
+        (activity) => activity.id === parent.activity_id
+      );
+      return users.filter((user) => {
+        for (let index = 0; index < Filteredactivity.length; index++) {
+          return Filteredactivity[index].user_id === user.id;
+        }
+      });
+    },
+  },
 };
 
 // two properties required - typeDefs , resolvers

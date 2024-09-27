@@ -16,7 +16,7 @@ export const typeDefs = `#graphql
     }
     type Activity_Document {
         id: ID!
-        activity_id: String!
+        activities: [Activity!]
         users: [User!]!
         document_name: String!
         document_url: String! 
