@@ -30,4 +30,24 @@ export const typeDefs = `#graphql
         activity_documents: [Activity_Document]
         activity_document(id: ID!): Activity_Document 
     }
+
+    type Mutation {
+        deleteActivityDocuments(id: ID!): [Activity_Document]
+        deleteUsers(id: ID!):[User]
+        AddUser(user:AddUserInput): [User]
+        editUser(id: ID!, updatedUser: EditUserInput ): User        
+    }
+    input AddUserInput {
+        name: String!
+        age: Int!
+        mobile_number: String! 
+    }
+
+    input EditUserInput {
+        name: String
+        age: Int
+        mobile_number: String 
+    }
 `;
+
+

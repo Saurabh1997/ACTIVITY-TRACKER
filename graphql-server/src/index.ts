@@ -58,6 +58,31 @@ const resolvers = {
       });
     },
   },
+  Mutation: {
+    deleteActivityDocuments(_: any, args: { id: string; }){
+      return activity_documents.filter((document) => document.id !== args.id) 
+    },
+    deleteUsers(_: any, args: { id: string; }) {
+      return users.filter((user) => user.id!== args.id)
+    },
+    AddUser(_: any, args: any) {
+    let usersArg = {
+      ...args.user,
+      id: Math.round(Math.random() *10000)
+    }    
+    users.push(usersArg)
+    return users
+  },
+  editUser: (_: any, args: any) => {
+     let Updatedusers = users.map((u) => {
+        if(args.id === u.id) {
+          return {...u, ...args.updatedUser}
+        } 
+        return u
+      })
+      return Updatedusers.find((u) => u.id === args.id)
+    }
+  }
 };
 
 // two properties required - typeDefs , resolvers
