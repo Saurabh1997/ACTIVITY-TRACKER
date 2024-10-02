@@ -62,7 +62,8 @@ function Receiver() {
       );
       //  if (senderVideoRef.current) {
       console.log(" coming here for setting src Object");
-      senderVideoRef.current.srcObject = new MediaStream([event.track]);
+      senderVideoRef.current.srcObject = event.streams[0];
+      //senderVideoRef.current.srcObject = new MediaStream([event.track]);
       //}
     };
   };
