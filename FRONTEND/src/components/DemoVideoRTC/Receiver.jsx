@@ -51,10 +51,19 @@ function Receiver() {
       }
     };
     ReceiverPeerConnection.ontrack = async (event) => {
-      console.log(" track here ", event, " vide p ", senderVideoRef);
-      if (senderVideoRef.current) {
-        senderVideoRef.current.srcObject = new MediaStream([event.track]);
-      }
+      const stream = event.streams[0];
+      console.log(
+        " track here ",
+        event,
+        " vide p ",
+        senderVideoRef,
+        " stream",
+        event.streams
+      );
+      //  if (senderVideoRef.current) {
+      console.log(" coming here for setting src Object");
+      senderVideoRef.current.srcObject = new MediaStream([event.track]);
+      //}
     };
   };
 
@@ -63,8 +72,8 @@ function Receiver() {
       <div>Receiver</div>
       {/* <button className="border m-2">Receive the call</button> */}
       {senderVideoRef !== null && (
-        <div className="">
-          <video ref={senderVideoRef}></video>
+        <div className="bg-transparent">
+          <video ref={senderVideoRef} autoPlay></video>
           {/* <video ref={receiverVideoRef}></video> */}
         </div>
       )}
