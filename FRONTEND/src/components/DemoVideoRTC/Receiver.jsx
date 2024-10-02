@@ -62,7 +62,9 @@ function Receiver() {
       );
       //  if (senderVideoRef.current) {
       console.log(" coming here for setting src Object");
+      // Below is for both audio and video stream.
       senderVideoRef.current.srcObject = event.streams[0];
+      // Below is for single video/audio stream
       //senderVideoRef.current.srcObject = new MediaStream([event.track]);
       //}
     };
