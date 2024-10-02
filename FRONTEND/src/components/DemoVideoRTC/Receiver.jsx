@@ -7,7 +7,7 @@ function Receiver() {
   const receiverVideoRef = useRef(null);
 
   useEffect(() => {
-    const socketCon = new WebSocket("ws://localhost:4041");
+    const socketCon = new WebSocket("ws://192.168.1.105:4041");
     if (socketCon) {
       setSocket(socketCon);
     }
@@ -50,8 +50,23 @@ function Receiver() {
         }
       }
     };
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: true,
+    });
+
+    if (receiverVideoRef.current) {
+      console.log(" stream 2 ", stream);
+
+      receiverVideoRef.current.srcObject = stream;
+    }
+
+    for (const track of stream.getTracks()) {
+      ReceiverPeerConnection.addTrack(track, stream);
+    }
+
     ReceiverPeerConnection.ontrack = async (event) => {
-      const stream = event.streams[0];
       console.log(
         " track here ",
         event,
@@ -60,6 +75,7 @@ function Receiver() {
         " stream",
         event.streams
       );
+
       //  if (senderVideoRef.current) {
       console.log(" coming here for setting src Object");
       senderVideoRef.current.srcObject = event.streams[0];
@@ -75,7 +91,11 @@ function Receiver() {
       {senderVideoRef !== null && (
         <div className="bg-transparent">
           <video ref={senderVideoRef} autoPlay></video>
-          {/* <video ref={receiverVideoRef}></video> */}
+        </div>
+      )}
+      {receiverVideoRef !== null && (
+        <div className="bg-transparent">
+          <video ref={receiverVideoRef} autoPlay mute></video>{" "}
         </div>
       )}
     </div>
