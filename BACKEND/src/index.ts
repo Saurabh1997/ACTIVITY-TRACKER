@@ -5,6 +5,8 @@ import { connectPostgresDB } from "./core/connectPostgres";
 import RedisConnector from "./core/connectToRedis";
 import { createResponseStructure } from "./utils/createResponseStructure";
 import cors, { CorsOptions } from "cors";
+import protobuff from "protobufjs";
+import fs from "fs";
 
 const app = express();
 app.use(express.json());
@@ -16,8 +18,49 @@ let corsOptions: CorsOptions = {
 
 app.use(cors(corsOptions));
 
+protobuff.load("src/sampleProto.proto", (err: any, root: any) => {
+  if (err) {
+    console.log(" er", err);
+  }
+
+  let loadedProto = root.lookupType("sampleProto.basicProto");
+  let protoPayload = {
+    id: "1",
+    name: "Saurabh",
+    age: 27,
+  };
+
+  // BELOW CODE IS TO VERIFY IF PAYLOAD IS ALIGNING WITH THE DEFINED PROTO FILE CONFIGURATION OR NOT.
+  let errMsg = loadedProto.verify(protoPayload);
+  if (errMsg) {
+    console.log(" err in verification ", errMsg);
+  }
+
+  // TO CREATE A NEW MESSAGE
+  let createdMsg = loadedProto.create(protoPayload);
+
+  // to encode the message to Uint8Array or buffer
+  let encodedMsg = loadedProto.encode(createdMsg).finish();
+
+  console.log(" encodedMsg ", encodedMsg);
+
+  fs.writeFileSync("protoFile.txt", encodedMsg);
+
+  let decoded = loadedProto.decode(encodedMsg);
+
+  console.log(" decode ", decoded);
+
+  let decodedObject = loadedProto.toObject(decoded, {
+    longs: String,
+    enums: String,
+    bytes: String,
+  });
+  console.log(" decoded Obj ", decodedObject);
+});
+
 const startServer = async () => {
-  await RedisConnector.getClientInstance();
+  //  await RedisConnector.getClientInstance();
+
   app.listen(4040, () => {
     console.log(" running on port");
   });

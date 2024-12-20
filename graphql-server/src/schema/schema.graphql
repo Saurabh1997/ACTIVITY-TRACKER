@@ -1,0 +1,32 @@
+type Query {
+  users: User
+}
+
+type User {
+  id: ID!
+  name: String!
+  age: Int!
+  mobile_number: String!
+  email: String!
+  password: String!
+  activities: [Activity!]
+}
+
+type Activity {
+  id: ID!
+  activity_name: String!
+  activity_steps: [String!]!
+  users: [User!]
+  activity_document: Activity_Document!
+  completed: Boolean!
+}
+
+type Activity_Document {
+  id: ID!
+  activities: [Activity!]
+  users: [User!]!
+  document_name: String!
+  document_url: String!
+}
+
+

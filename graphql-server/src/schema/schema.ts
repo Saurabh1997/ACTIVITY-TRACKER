@@ -4,6 +4,8 @@ export const typeDefs = `#graphql
         name: String!
         age: Int!
         mobile_number: String! 
+        email: String!
+        password: String!
         activities: [Activity!]       
     }
     type Activity {
@@ -49,5 +51,3 @@ export const typeDefs = `#graphql
         mobile_number: String 
     }
 `;
-
-

@@ -1,0 +1,9 @@
+package sampleProto;
+
+syntax="proto3";
+
+message basicProto {
+    string id=1;
+    string name=2;
+    int32 age=3;
+}

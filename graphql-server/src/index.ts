@@ -1,7 +1,15 @@
+import cors from "cors";
+import express from "express";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import { typeDefs } from "./schema/schema.js";
+import { expressMiddleware as apolloMiddleware } from "@apollo/server/express4";
 import { activities, activity_documents, users } from "./db/_db.js";
+
+// Below typeDef is a basic schema. We usually write typeDefs in a  *.graphql file.
+import { typeDefs } from "./schema/schema.js";
+
+const app = express();
+app.use(cors(), express.json());
 
 const resolvers = {
   Query: {
@@ -59,30 +67,30 @@ const resolvers = {
     },
   },
   Mutation: {
-    deleteActivityDocuments(_: any, args: { id: string; }){
-      return activity_documents.filter((document) => document.id !== args.id) 
+    deleteActivityDocuments(_: any, args: { id: string }) {
+      return activity_documents.filter((document) => document.id !== args.id);
     },
-    deleteUsers(_: any, args: { id: string; }) {
-      return users.filter((user) => user.id!== args.id)
+    deleteUsers(_: any, args: { id: string }) {
+      return users.filter((user) => user.id !== args.id);
     },
     AddUser(_: any, args: any) {
-    let usersArg = {
-      ...args.user,
-      id: Math.round(Math.random() *10000)
-    }    
-    users.push(usersArg)
-    return users
+      let usersArg = {
+        ...args.user,
+        id: Math.round(Math.random() * 10000),
+      };
+      users.push(usersArg);
+      return users;
+    },
+    editUser: (_: any, args: any) => {
+      let Updatedusers = users.map((u) => {
+        if (args.id === u.id) {
+          return { ...u, ...args.updatedUser };
+        }
+        return u;
+      });
+      return Updatedusers.find((u) => u.id === args.id);
+    },
   },
-  editUser: (_: any, args: any) => {
-     let Updatedusers = users.map((u) => {
-        if(args.id === u.id) {
-          return {...u, ...args.updatedUser}
-        } 
-        return u
-      })
-      return Updatedusers.find((u) => u.id === args.id)
-    }
-  }
 };
 
 // two properties required - typeDefs , resolvers
@@ -91,12 +99,23 @@ const server = new ApolloServer({
   resolvers,
 });
 
-const startApolloGraphqlServer = async () => {
-  const { url } = await startStandaloneServer(server, {
-    listen: { port: 5431 },
-  });
+// BELOW CODE IS FOR STANDALONE GRAPHQL SERVER
+// const startApolloGraphqlServer = async () => {
+//   const { url } = await startStandaloneServer(server, {
+//     listen: { port: 5431 },
+//   });
 
-  console.log(" server is ready at port 5431");
-};
+//   console.log(" server is ready at port 5431");
+// };
 
-startApolloGraphqlServer();
+// startApolloGraphqlServer();
+
+await server.start();
+app.use(
+  "/graphql",
+  apolloMiddleware(server, { context: async ({ req }) => ({ token: "data" }) })
+);
+
+app.listen(9001, () => {
+  console.log("server is running");
+});
